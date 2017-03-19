@@ -9,7 +9,6 @@ from csv import reader
 from apps.api.models import NRCS_Locations
 
 def create_record(ld):
-    print ld[3]
     location = NRCS_Locations.objects.create(
         Site_Name=ld[0],
         Station=ld[1],
