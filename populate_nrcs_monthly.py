@@ -25,24 +25,53 @@ def format_date(date_str,water_year):
         new_date_str = '{year}-{month}-{day}'.format(year=water_year,month=month_num_str,day=day_str)
         return new_date_str
 
-def create_record(row_dict,station):
-    try:
-        location = NRCS_Locations.objects.get(pk=station)
-    except Exception as e:
-        print e
-        print station
-        print row_dict
-    monthly_snow_record = NRCS_MonthlySnow.objects.create(location=location,Water_Year=row_dict['Water_Year'])
+def field_prefix(field_name):
+    return field_name.split('_')[0]
 
-    location.Station = station
-    for field in row_dict:
-        if 'collection_date' in field:
-            row_dict[field] = format_date(row_dict[field],row_dict['Water_Year'])
-        if row_dict[field] == '':
-            row_dict[field] = None
-        setattr(monthly_snow_record,field,row_dict[field])
+def is_null_or_empty(text):
+    return text == '' or text == None
+
+def remove_empty_fields(row_dict):
+    return {field: row_dict[field] for field in row_dict if not is_null_or_empty(row_dict[field])}
+
+def remove_prefix(field_name):
+    components = field_name.split('_')
+    return '_'.join(components[1:])
+
+def get_months_data(row_dict):
+    row_data = remove_empty_fields(row_dict)
+    field_prefixes = [field_prefix(field) for field in row_data]
+    included_months = [month for month in months if month in field_prefixes]
+
+    months_data = {}
+
+    for month in included_months:
+        month_num = months.index(month) + 1
+        month_fields = [field for field in row_data if field_prefix(field) == month]
+        month_data = {remove_prefix(field): row_data[field] for field in month_fields}
+        months_data[month_num] = month_data
+
+    return months_data
+
+def create_record(month_num,month_data,station,water_year):
+    location = NRCS_Locations.objects.get(pk=station)
+    monthly_snow_record = NRCS_MonthlySnow.objects.create(location=location,water_year=water_year,collection_month=month_num)
+
+    for field in month_data:
+        if field == 'collection_date':
+            month_data[field] = format_date(month_data[field],water_year)
+        if month_data[field] == '':
+            month_data[field] = None
+        setattr(monthly_snow_record,field,month_data[field])
 
     monthly_snow_record.save()
+
+def split_csv_row_into_records(row_dict,station):
+    months_data = get_months_data(row_dict)
+    for month_num in months_data:
+        month_data = months_data[month_num]
+        water_year = row_dict['Water_Year']
+        create_record(month_num,month_data,station,water_year)
 
 filenames = glob('../skipy_data/processed_snowmonth/*.csv')
 
@@ -56,7 +85,7 @@ for filename in filenames:
         station = without_extension.split('_')[-1]
 
         for row_dict in lines:
-            create_record(row_dict,station)
+            split_csv_row_into_records(row_dict, station)
 
 
 
