@@ -6,12 +6,18 @@ class Map extends React.Component{
   }
 
   componentDidMount() {
-    mapOptions = {
-        zoom: 10,
-        center: new google.maps.LatLng(46.8764708, -114.1582527)
-    }
+    var gMapsScript = document.createElement('script');
+    gMapsScript.type = 'text/javascript';
+    gMapsScript.src = 'https://maps.googleapis.com/maps/api/js';
+    document.head.appendChild(gMapsScript);
 
-    return new google.maps.Map(refs.map_canvas.getDOMNode(), mapOptions)
+    gMapsScript.onload = function(){
+      var mapOptions = {
+          zoom: 10,
+          center: new google.maps.LatLng(46.8764708, -114.1582527)
+      }
+      return new google.maps.Map(refs.map_canvas.getDOMNode(), mapOptions)
+    };
   }
 
 }
