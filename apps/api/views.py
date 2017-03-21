@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from rest_framework.decorators import api_view
 
-from models import NRCS_Locations
-from serializers import NRCS_LocationsSerializer
+from .models import NRCS_Locations
+from .serializers import NRCS_LocationsSerializer
 
 @api_view(['GET'])
 def get_snowpack_data(request):
