@@ -6,3 +6,4 @@ class NRCS_LocationsSerializer(serializers.ModelSerializer):
     class Meta:
         model = NRCS_Locations
         fields = ('site_name', 'elev', 'lat', 'lon', 'state', 'county')
+        
