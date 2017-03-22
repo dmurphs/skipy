@@ -1,23 +1,34 @@
 import React from 'react';
 
 class Map extends React.Component{
+
+
   render () {
-    return <div ref="map_canvas"></div>;
+    return <div ref="map_canvas" style={{"height" : "100%", "width": "100%"}}></div>;
   }
 
   componentDidMount() {
-    var gMapsScript = document.createElement('script');
-    gMapsScript.type = 'text/javascript';
-    gMapsScript.src = 'https://maps.googleapis.com/maps/api/js';
-    document.head.appendChild(gMapsScript);
+    let mapCanvas = this.refs.map_canvas;
 
-    gMapsScript.onload = function(){
-      var mapOptions = {
+    let mapOptions = {
           zoom: 10,
-          center: new google.maps.LatLng(46.8764708, -114.1582527)
+          center: new google.maps.LatLng(46.8764708, -114.1582527),
+          mapTypeId: 'terrain'
       }
-      return new google.maps.Map(refs.map_canvas.getDOMNode(), mapOptions)
-    };
+
+    this.map = new google.maps.Map(mapCanvas, mapOptions)
+
+    this.addMarker(46.8764708, -114.1582527);
+  }
+
+  addMarker(latitude,longitude){
+    var latLon = {lat: latitude, lng: longitude};
+
+    var marker = new google.maps.Marker({
+      position: latLon,
+      map: this.map,
+      title: 'Hello World!'
+    });
   }
 
 }
