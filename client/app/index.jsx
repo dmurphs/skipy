@@ -5,7 +5,7 @@ import Map from './components/Map'
 
 class App extends React.Component {
   render () {
-    return <Map />;
+    return <Map initLat='46.8764708' initLon='-114.1582527'/>;
   }
 }
 
