@@ -9,9 +9,7 @@ from apps.home import views as home_views
 from apps.maps import urls as maps_urls
 
 base_patterns = [
-    url(r'^$', home_views.index, name='home'),
     url(r'^api/', include(api_urls)),
-    url(r'^maps/', include(maps_urls)),
     url(r'^admin/', admin.site.urls),
 ]
 
