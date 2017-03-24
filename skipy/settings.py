@@ -28,8 +28,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework',
     'apps.api',
-    'apps.home',
-    'apps.maps',
 ]
 
 MIDDLEWARE = [

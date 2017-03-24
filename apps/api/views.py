@@ -15,7 +15,7 @@ def get_locations(request):
 @api_view(['GET'])
 def get_all_location_data(request, station_id):
     '''Get all monthly snow data for location
-       example query: /api/get/12D10'''
+       example query: /api/12D10'''
     location = NRCS_Locations.objects.get(pk=station_id)
     all_snow_data = NRCS_MonthlySnow.objects.filter(location=location)
     serializer = NRCS_MonthlySnowSerializer(all_snow_data, many=True)
@@ -24,7 +24,7 @@ def get_all_location_data(request, station_id):
 @api_view(['GET'])
 def get_location_data_for_year(request, station_id, year):
     '''Get data from specific year for location
-       example query: /api/get/12D10/1999)'''
+       example query: /api/12D10/1999)'''
     location = NRCS_Locations.objects.get(pk=station_id)
     year_snow_data = NRCS_MonthlySnow.objects.filter(location=location,water_year=year)
     serializer = NRCS_MonthlySnowSerializer(year_snow_data, many=True)

@@ -5,8 +5,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 from apps.api import urls as api_urls
-from apps.home import views as home_views
-from apps.maps import urls as maps_urls
 
 base_patterns = [
     url(r'^api/', include(api_urls)),
