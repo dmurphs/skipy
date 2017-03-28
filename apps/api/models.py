@@ -16,7 +16,7 @@ class NRCS_Locations(models.Model):
     shef = models.CharField(max_length=7)
 
 class NRCS_MonthlySnow(models.Model):
-    location = models.ForeignKey(NRCS_Locations)
+    location = models.ForeignKey(NRCS_Locations, related_name='monthly_snow')
     water_year = models.PositiveSmallIntegerField()
     collection_month = models.PositiveSmallIntegerField()
     collection_date = models.DateField(null=True)

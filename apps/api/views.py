@@ -11,14 +11,13 @@ class LocationList(generics.ListAPIView):
     queryset = NRCS_Locations.objects.all()
     serializer_class = NRCS_LocationsSerializer
 
-class LocationData(generics.ListAPIView):
-    '''Get all monthly snow data for location
-       example query: /api/12D10/1999'''
+class MonthlySnowList(generics.ListAPIView):
+    '''Get all locations'''
+    serializer_class = NRCS_MonthlySnowSerializer
 
     def get_queryset(self):
-        station_id = self.kwargs['station_id']
-        year = self.kwargs['year']
-        location = NRCS_Locations.objects.get(pk=station_id)
-        return NRCS_MonthlySnow.objects.filter(location=location,water_year=year)
+        year = int(self.kwargs['year'])
+        month = int(self.kwargs['month'])
 
-    serializer_class = NRCS_MonthlySnowSerializer
+        return NRCS_MonthlySnow.objects.filter(collection_date__year=year,
+                                               collection_date__month=month)
